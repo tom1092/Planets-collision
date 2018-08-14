@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ThreeJs and shader demo</title>
+	<style>
+		body { margin: 0; padding: 0; font-size: 0; }
+		canvas { width: 100%; height: 100%; }
+	</style>
+	<script src="js/three.js"></script>
+	<script src="js/controls/OrbitControls.js"></script>
+    <script src="js/dat.gui.min.js"></script>
+    <script src="js/utils.js"></script>
+	<script src="js/constantsUtill.js"></script>
+</head>
+
+<body>
+
+<script id="sunVertexShader" type="x-shader/x-vertex">
+	varying vec2 vTextCoord;
+
+	void main() {
+
+		gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+		vTextCoord = vec2(position);
+	}
+</script>
+
+<script id="sunFragmentShader" type="x-shader/x-fragment">
+    uniform sampler2D mytexture;
+    varying vec2 vTextCoord;
+
+	void main() {
+	    gl_FragColor = texture2D(mytexture, vTextCoord);
+	}
+</script>
+
+<script id="planetVertexShader" type="x-shader/x-vertex">
+	varying vec2 vTextCoord;
+
+	varying vec4 vPosition; //for light purpose
+
+	void main() {
+
+	    vPosition = vec4(position, 1.0);
+
+		gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+		vTextCoord = vec2(position);
+	}
+</script>
+
+<script id="planetFragmentShader" type="x-shader/x-fragment">
+    uniform sampler2D mytexture;
+    varying vec2 vTextCoord;
+
+    varying vec4 vPosition;
+
+    uniform vec3 center;
+    uniform vec3 uLight;
+
+	void main() {
+	    vec3 toLight = normalize(uLight-vec3(vPosition));
+        vec3 normal = normalize(vec3(vPosition)-vec3(center));
+        float diffuse = max(0.0, dot(normal, toLight)); //angle beetween normal and toLight
+        vec4 colorTmp = texture2D(mytexture, vTextCoord);
+        vec3 color = diffuse*vec3(colorTmp);
+	    gl_FragColor = vec4(color, 1.0);
+	}
+</script>
+
+<script id="vertexShaderPlanetImpact" type="x-shader/x-vertex">
+	varying vec2 vTextCoord;
+	uniform float time;
+	uniform vec3 hitPoint;
+	uniform vec3 vcm;
+	uniform float deltaEk;
+	uniform vec3 center;
+	uniform float radius;
+
+	//varying float tmp; uncomment to view particles involved
+
+	highp float rand(vec2 co){
+        return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+    }
+
+	void main() {
+	    float dist1 = distance(position, hitPoint);
+	    float dist2 = distance(position, center);
+
+	    vec3 impactDirection = position - hitPoint;
+	    float f = 0.8*exp(-0.8*dist1)*sqrt(2.0*deltaEk);
+	    //float f = log(deltaEk)/(10.0*dist1);
+
+        vec3 vNorm = normalize(vcm);
+
+        float randomFactor = rand(vec2(rand(vec2(position.x, position.y)), position.z));
+        if((dist1 < radius*2.0*0.85) && (dist2 > radius*0.5)){
+            f = (f + randomFactor)/100.0;
+            //tmp = 1.0;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x + impactDirection.x*f*time,
+		                                                                position.y + impactDirection.y*f*time,
+		                                                                position.z + impactDirection.z*f*time, 1.0);
+        }
+        else{
+            //tmp = 0.0;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x + vNorm.x/100.0 * randomFactor * time,
+                                                                    position.y + vNorm.y/100.0 * randomFactor * time,
+                                                                    position.z + vNorm.z/100.0 * randomFactor * time, 1.0);
+        }
+		vTextCoord = vec2(position);
+	}
+</script>
+
+<script id="fragmentShaderPlanetImpact" type="x-shader/x-fragment">
+    uniform sampler2D mytexture;
+    varying vec2 vTextCoord;
+
+    //varying float tmp;
+	void main() {
+	    gl_FragColor = texture2D(mytexture, vTextCoord);
+	    /*if(tmp == 0.0){
+	        gl_FragColor = texture2D(mytexture, vTextCoord);
+	    }
+	    else{
+	        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+	    }*/
+	}
+</script>
+
+<script>
+
+    //RENDERER
+    var renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    //SCENE AND CAMERA
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight);
+    camera.position.z = 200;
+    scene.add(camera);
+
+    //SET CUBE BACKGROUND
+    var genCubeUrls = function( prefix, postfix ) {
+        return [
+            prefix + 'px' + postfix, prefix + 'nx' + postfix,
+            prefix + 'py' + postfix, prefix + 'ny' + postfix,
+            prefix + 'pz' + postfix, prefix + 'nz' + postfix
+        ];
+    };
+
+    var ldrUrls = genCubeUrls( "images/MilkyWay/dark-s_", ".jpg" );
+    scene.background = new THREE.CubeTextureLoader().load(ldrUrls);
+
+    //AXES HELPER
+    var axesHelper = new THREE.AxesHelper(5); //The X axis is red. The Y axis is green. The Z axis is blue.
+    scene.add(axesHelper);
+
+    //CAMERA CONTROLS
+    var controls;
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+    //****************************
+    //Sun modeling
+
+    const SUN_MATERIAL = create_shader_material('images/sun.png', 'sunVertexShader', 'sunFragmentShader');
+    var sun ={
+        radius: SUN_RADIUS,
+        mass: SUN_MASS,
+        obj: createPointsPlanet(SUN_RADIUS, SUN_PARTICLES, SUN_INIT_POSITION, SUN_MATERIAL),
+        center: SUN_INIT_POSITION,
+        velocity: SUN_INIT_VELOCITY,
+        acceleration: SUN_INIT_ACCELERATION
+    };
+    scene.add(sun.obj);
+
+    //****************************
+    //Asteroid modeling
+
+    const ASTEROID_MATERIAL = create_shader_material('images/moon.jpeg', 'planetVertexShader', 'planetFragmentShader');
+    var asteroid ={
+        radius: ASTEROID_RADIUS,
+        mass: ASTEROID_MASS,
+        obj: createPointsPlanet(ASTEROID_RADIUS, ASTEROID_PARTICLES, ASTEROID_INIT_POSITION, ASTEROID_MATERIAL),
+        center: ASTEROID_INIT_POSITION,
+        velocity: ASTEROID_INIT_VELOCITY,
+        acceleration: ASTEROID_INIT_ACCELERATION
+    };
+    asteroid.obj.material.uniforms.center = {value: asteroid.center};
+    asteroid.obj.material.uniforms.uLight = {value: sun.center};
+    scene.add(asteroid.obj);
+
+    //****************************
+	//Earth modeling
+
+    var loader = new THREE.TextureLoader();
+    var earthTexture = loader.load( 'images/land_ocean_ice_cloud_2048.jpg');
+
+	var earthGeometry = new THREE.SphereBufferGeometry( 3, 20, 20 );
+	var earthMaterial = new THREE.MeshBasicMaterial( { map: earthTexture, overdraw: 0.5 } );
+	var earth = new THREE.Mesh( earthGeometry, earthMaterial );
+	scene.add(earth);
+
+	//*****************************
+    //Audio
+
+    //Create an AudioListener and add it to the camera
+    var listener = new THREE.AudioListener();
+    camera.add( listener );
+    // create a global audio source
+    var sound = new THREE.Audio( listener );
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( 'audio/interstellarPiano.mp3', function( buffer ) {
+        sound.setBuffer( buffer );
+        sound.setLoop(true);
+        sound.setVolume(0.5);
+        sound.play();
+    });
+
+	//**********************************
+
+    var impact = false;
+    var asteroidHit;
+
+    function animate() {
+
+        if(asteroid.center.distanceTo(sun.center) < (asteroid.radius + sun.radius) && impact == false){
+            impact = true;
+
+            var vcm, dEk;
+            [vcm, dEk] = anelastic_impact(asteroid, sun);
+            vcm = vectorScalarProduct(vcm, Math.pow(10, -8));
+            dEk = dEk * Math.pow(10, -57);
+
+            var hitPoint = vectorScalarProduct(vectorSum(asteroid.center, sun.center), 0.5);
+            scene.remove(asteroid.obj);
+
+            //Vector view of center of mass velocity vector
+            var arrowHelper = new THREE.ArrowHelper( new THREE.Vector3(vcm.x,vcm.y,vcm.z).normalize(), hitPoint, vectorNorm(vcm) * 10, 0xffff00 );
+            scene.add( arrowHelper );
+
+            const ASTEROID_IMPACT_MATERIAL = create_shader_material('images/moon.jpeg', 'vertexShaderPlanetImpact', 'fragmentShaderPlanetImpact');
+            asteroidHit ={
+                radius: ASTEROID_RADIUS,
+                mass: ASTEROID_MASS,
+                obj: createPointsPlanet(ASTEROID_RADIUS, ASTEROID_PARTICLES, asteroid.center, ASTEROID_IMPACT_MATERIAL),
+                center: asteroid.center,
+                velocity: asteroid.velocity,
+                acceleration: asteroid.acceleration
+            };
+            scene.add(asteroidHit.obj);
+
+            asteroidHit.obj.material.uniforms.time = {value: 0};
+            asteroidHit.obj.material.uniforms.hitPoint = {value: hitPoint};
+            asteroidHit.obj.material.uniforms.deltaEk = {value: dEk};
+            asteroidHit.obj.material.uniforms.vcm = {value: vcm};
+            asteroidHit.obj.material.uniforms.center = {value: asteroidHit.center};
+            asteroidHit.obj.material.uniforms.radius = {value: asteroidHit.radius};
+        }
+        else if(impact == true){
+            asteroidHit.obj.material.uniforms.time.value += 0.1;//TODO: 1/60;
+        }
+        else {
+            var asteroidInitPosition = asteroid.obj.geometry.attributes.position.array.slice(0); //copy asteroid init position
+            newton_movement(asteroid, sun, asteroidInitPosition);
+            asteroid.obj.material.uniforms.center = {value: asteroid.center}; //update asteroid center uniform variable (light purposes)
+        }
+
+        //Earth orbit
+        var time = performance.now(); //millisecond
+        time = time / 1000;
+        earth.position.set(100*Math.sin(time/50), 130 * Math.cos(time/50), -2 * Math.cos(time/50));
+        earth.rotation.y = time/10;
+
+        requestAnimationFrame(animate);
+        camera.updateMatrixWorld( true );
+        renderer.render(scene, camera);
+
+    }
+    animate();
+	</script>
+
+</body>
+</html>
