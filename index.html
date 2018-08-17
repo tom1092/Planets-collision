@@ -19,9 +19,11 @@
 <script id="sunVertexShader" type="x-shader/x-vertex">
 	varying vec2 vTextCoord;
 
+	uniform float time;
+
 	void main() {
 
-		gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+		gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x, position.y, position.z, 1.0);
 		vTextCoord = vec2(position);
 	}
 </script>
@@ -32,6 +34,7 @@
 
 	void main() {
 	    gl_FragColor = texture2D(mytexture, vTextCoord);
+
 	}
 </script>
 
@@ -163,7 +166,7 @@
     //****************************
     //Sun modeling
 
-    const SUN_MATERIAL = create_shader_material('images/sun.png', 'sunVertexShader', 'sunFragmentShader');
+    const SUN_MATERIAL = create_shader_material('images/8k_sun.jpg', 'sunVertexShader', 'sunFragmentShader');
     var sun ={
         radius: SUN_RADIUS,
         mass: SUN_MASS,
@@ -173,11 +176,12 @@
         acceleration: SUN_INIT_ACCELERATION
     };
     scene.add(sun.obj);
+    sun.obj.material.uniforms.time = {value: 0};
 
     //****************************
     //Asteroid modeling
 
-    const ASTEROID_MATERIAL = create_shader_material('images/moon.jpeg', 'planetVertexShader', 'planetFragmentShader');
+    const ASTEROID_MATERIAL = create_shader_material('images/asteroid.jpg', 'planetVertexShader', 'planetFragmentShader');
     var asteroid ={
         radius: ASTEROID_RADIUS,
         mass: ASTEROID_MASS,
@@ -224,7 +228,9 @@
 
     function animate() {
 
+
         if(asteroid.center.distanceTo(sun.center) < (asteroid.radius + sun.radius) && impact == false){
+            console.log(asteroid.velocity)
             impact = true;
 
             var vcm, dEk;
@@ -236,10 +242,10 @@
             scene.remove(asteroid.obj);
 
             //Vector view of center of mass velocity vector
-            var arrowHelper = new THREE.ArrowHelper( new THREE.Vector3(vcm.x,vcm.y,vcm.z).normalize(), hitPoint, vectorNorm(vcm) * 10, 0xffff00 );
+            var arrowHelper = new THREE.ArrowHelper( vcm.normalize(), hitPoint, 10, 0xffff00 );
             scene.add( arrowHelper );
 
-            const ASTEROID_IMPACT_MATERIAL = create_shader_material('images/moon.jpeg', 'vertexShaderPlanetImpact', 'fragmentShaderPlanetImpact');
+            const ASTEROID_IMPACT_MATERIAL = create_shader_material('images/asteroid.jpg', 'vertexShaderPlanetImpact', 'fragmentShaderPlanetImpact');
             asteroidHit ={
                 radius: ASTEROID_RADIUS,
                 mass: ASTEROID_MASS,
@@ -266,10 +272,13 @@
             asteroid.obj.material.uniforms.center = {value: asteroid.center}; //update asteroid center uniform variable (light purposes)
         }
 
+        var time = performance.now()/1000; //time second
+
+        //sun texture animation
+        sun.obj.material.uniforms.time.value += (time/10);
+
         //Earth orbit
-        var time = performance.now(); //millisecond
-        time = time / 1000;
-        earth.position.set(100*Math.sin(time/50), 130 * Math.cos(time/50), -2 * Math.cos(time/50));
+        earth.position.set(80*Math.sin(time/50), 130 * Math.cos(time/50), -100 * Math.cos(time/50));
         earth.rotation.y = time/10;
 
         requestAnimationFrame(animate);
