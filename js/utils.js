@@ -1,4 +1,4 @@
-//UTILITY
+
 
 function createPointsPlanet(radius, numPoints, initPosition, material) {
     var geometry = new THREE.BufferGeometry();
