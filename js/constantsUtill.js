@@ -1,3 +1,6 @@
+//COSTANTI
+
+
 var scaled_G = 6.67408*Math.pow(10,-11);
 
 //SUN
