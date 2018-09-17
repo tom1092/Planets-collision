@@ -163,10 +163,16 @@
     var controls;
     controls = new THREE.OrbitControls( camera, renderer.domElement );
 
+    //LIGHT
+    var light = new THREE.PointLight( 0xff0000, 1, 100 );
+    light.position.set( 0, 0, 0 );
+    scene.add( light );
+
+
     //****************************
     //Sun modeling
 
-    const SUN_MATERIAL = create_shader_material('images/8k_sun.jpg', 'sunVertexShader', 'sunFragmentShader');
+    const SUN_MATERIAL = create_shader_material('images/sun.png', 'sunVertexShader', 'sunFragmentShader');
     var sun ={
         radius: SUN_RADIUS,
         mass: SUN_MASS,
@@ -177,6 +183,7 @@
     };
     scene.add(sun.obj);
     sun.obj.material.uniforms.time = {value: 0};
+
 
     //****************************
     //Asteroid modeling
@@ -201,9 +208,10 @@
     var earthTexture = loader.load( 'images/land_ocean_ice_cloud_2048.jpg');
 
 	var earthGeometry = new THREE.SphereBufferGeometry( 3, 20, 20 );
-	var earthMaterial = new THREE.MeshBasicMaterial( { map: earthTexture, overdraw: 0.5 } );
+	var earthMaterial = new THREE.MeshBasicMaterial( { map: earthTexture, overdraw: 0.5} );
 	var earth = new THREE.Mesh( earthGeometry, earthMaterial );
 	scene.add(earth);
+	earth.position.set(EARTH_INIT_POSITION.x, EARTH_INIT_POSITION.y, EARTH_INIT_POSITION.z);
 
 	//*****************************
     //Audio
@@ -218,7 +226,7 @@
         sound.setBuffer( buffer );
         sound.setLoop(true);
         sound.setVolume(0.5);
-        sound.play();
+        //sound.play();
     });
 
 	//**********************************
@@ -263,12 +271,15 @@
             asteroidHit.obj.material.uniforms.center = {value: asteroidHit.center};
             asteroidHit.obj.material.uniforms.radius = {value: asteroidHit.radius};
         }
+
         else if(impact == true){
             asteroidHit.obj.material.uniforms.time.value += 0.1;//TODO: 1/60;
         }
+
         else {
             var asteroidInitPosition = asteroid.obj.geometry.attributes.position.array.slice(0); //copy asteroid init position
             newton_movement(asteroid, sun, asteroidInitPosition);
+
             asteroid.obj.material.uniforms.center = {value: asteroid.center}; //update asteroid center uniform variable (light purposes)
         }
 
@@ -276,10 +287,12 @@
 
         //sun texture animation
         sun.obj.material.uniforms.time.value += (time/10);
+        shake(sun);
 
         //Earth orbit
-        earth.position.set(80*Math.sin(time/50), 130 * Math.cos(time/50), -100 * Math.cos(time/50));
-        earth.rotation.y = time/10;
+        EARTH_VELOCITY = planet_newton_movement(earth, EARTH_VELOCITY, sun);
+        //earth.position.set(80*Math.sin(time/50), 130 * Math.cos(time/50), -100 * Math.cos(time/50));
+        earth.rotation.y = 5*time;
 
         requestAnimationFrame(animate);
         camera.updateMatrixWorld( true );
