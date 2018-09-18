@@ -10,7 +10,7 @@
 	<script src="js/three.js"></script>
 	<script src="js/controls/OrbitControls.js"></script>
     <script src="js/dat.gui.min.js"></script>
-    <script src="js/utils.js"></script>
+    <script src="utils.js"></script>
 	<script src="js/constantsUtill.js"></script>
 </head>
 
@@ -79,18 +79,25 @@
 	uniform float deltaEk;
 	uniform vec3 center;
 	uniform float radius;
+	uniform vec3 sunCenter;
 
-	//varying float tmp; uncomment to view particles involved
+	//varying float tmp; //uncomment to view particles involved
 
 	highp float rand(vec2 co){
         return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
     }
 
 	void main() {
+
+        
 	    float dist1 = distance(position, hitPoint);
 	    float dist2 = distance(position, center);
 
+		vec3 sunDirection = sunCenter - position;
 	    vec3 impactDirection = position - hitPoint;
+
+	    vec3 positionToSun = vec3(position);
+
 	    float f = 0.8*exp(-0.8*dist1)*sqrt(2.0*deltaEk);
 	    //float f = log(deltaEk)/(10.0*dist1);
 
@@ -98,17 +105,22 @@
 
         float randomFactor = rand(vec2(rand(vec2(position.x, position.y)), position.z));
         if((dist1 < radius*2.0*0.85) && (dist2 > radius*0.5)){
-            f = (f + randomFactor)/100.0;
             //tmp = 1.0;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x + impactDirection.x*f*time,
-		                                                                position.y + impactDirection.y*f*time,
-		                                                                position.z + impactDirection.z*f*time, 1.0);
+            f = (f + randomFactor)/100.0;
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x + impactDirection.x*f*time, position.y + impactDirection.y*f*time, position.z + impactDirection.z*f*time, 1.0);
+
+
         }
         else{
-            //tmp = 0.0;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x + vNorm.x/100.0 * randomFactor * time,
-                                                                    position.y + vNorm.y/100.0 * randomFactor * time,
-                                                                    position.z + vNorm.z/100.0 * randomFactor * time, 1.0);
+
+            positionToSun = vec3(position.x + sunDirection.x * randomFactor/100.0 * time,
+             					 position.y + sunDirection.y * randomFactor/100.0 * time,
+             					 position.z + sunDirection.z * randomFactor/100.0 * time);
+            if (distance(positionToSun, sunCenter) < 7.0){
+                positionToSun = vec3(rand(vec2(rand(vec2(positionToSun.x, positionToSun.y)), position.z)), rand(vec2(rand(vec2(positionToSun.y, positionToSun.x)), position.z)), rand(vec2(rand(vec2(positionToSun.z, positionToSun.x)), position.y)));
+            }
+         	gl_Position = projectionMatrix * modelViewMatrix * vec4(positionToSun, 1.0);
         }
 		vTextCoord = vec2(position);
 	}
@@ -118,15 +130,17 @@
     uniform sampler2D mytexture;
     varying vec2 vTextCoord;
 
-    //varying float tmp;
+    varying float tmp;
 	void main() {
 	    gl_FragColor = texture2D(mytexture, vTextCoord);
-	    /*if(tmp == 0.0){
+	    /*
+	    if(tmp == 1.0){
 	        gl_FragColor = texture2D(mytexture, vTextCoord);
 	    }
 	    else{
 	        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-	    }*/
+	    }
+	    */
 	}
 </script>
 
@@ -226,7 +240,7 @@
         sound.setBuffer( buffer );
         sound.setLoop(true);
         sound.setVolume(0.5);
-        sound.play();
+        //sound.play();
     });
 
 	//**********************************
@@ -243,8 +257,12 @@
 
             var vcm, dEk;
             [vcm, dEk] = anelastic_impact(asteroid, sun);
-            vcm = vectorScalarProduct(vcm, Math.pow(10, -8));
-            dEk = dEk * Math.pow(10, -57);
+            console.log("params");
+            console.log(vcm, dEk);
+            vcm = vectorScalarProduct(vcm, Math.pow(10, 3));
+            dEk = dEk * Math.pow(10, -40);
+
+
 
             var hitPoint = vectorScalarProduct(vectorSum(asteroid.center, sun.center), 0.5);
             scene.remove(asteroid.obj);
@@ -270,6 +288,7 @@
             asteroidHit.obj.material.uniforms.vcm = {value: vcm};
             asteroidHit.obj.material.uniforms.center = {value: asteroidHit.center};
             asteroidHit.obj.material.uniforms.radius = {value: asteroidHit.radius};
+            asteroidHit.obj.material.uniforms.sunCenter = {value: sun.center};
         }
 
         else if(impact == true){
