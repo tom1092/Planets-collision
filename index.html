@@ -133,7 +133,7 @@
             final = normalize(final);
             final = vec3(final.x*sunRadius, final.y*sunRadius, final.z*sunRadius);
             final = final+sunCenter;
-            float lambda = 1.0-0.002*time;
+            float lambda = 1.0-0.01*time;
             positionToSun = vec3((1.0-lambda)*final.x + lambda*position.x, (1.0-lambda)*final.y + lambda*position.y, (1.0-lambda)*final.z + lambda*position.z);
             if (distance(final, sunCenter)>distance(positionToSun, sunCenter) || (dot(positionToSun, vec3(final-sunCenter)) < 0.0)){
                 positionToSun = final;
