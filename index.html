@@ -12,6 +12,7 @@
     <script src="js/dat.gui.min.js"></script>
     <script src="utils.js"></script>
 	<script src="js/constantsUtill.js"></script>
+    <script src="js/Stats.js"></script>
 </head>
 
 <body style="text-align: center;">
@@ -128,12 +129,11 @@
 
             float sunRadius = 30.0;
             positionToSun = position;
-            float underTheSurface = 0.98;
             vec3 final = vec3(position-sunCenter);
             final = normalize(final);
-            final = vec3(final.x*sunRadius*underTheSurface, final.y*sunRadius*underTheSurface, final.z*sunRadius*underTheSurface);
+            final = vec3(final.x*sunRadius, final.y*sunRadius, final.z*sunRadius);
             final = final+sunCenter;
-            float lambda = 1.0-0.005*time;
+            float lambda = 1.0-0.002*time;
             positionToSun = vec3((1.0-lambda)*final.x + lambda*position.x, (1.0-lambda)*final.y + lambda*position.y, (1.0-lambda)*final.z + lambda*position.z);
             if (distance(final, sunCenter)>distance(positionToSun, sunCenter) || (dot(positionToSun, vec3(final-sunCenter)) < 0.0)){
                 positionToSun = final;
@@ -149,8 +149,32 @@
     varying vec2 vTextCoord;
 
     varying float tmp;
+
+    highp float rand(vec2 co){
+        return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+    }
 	void main() {
-	    gl_FragColor = texture2D(mytexture, vTextCoord);
+
+	    float random = rand(vTextCoord);
+
+	    //Ottengo qualche colore rosso o arancione per simulare anche la deriva di alcune particelle del sole
+
+	    //Arancione con prob del 20%
+	    if(random<0.999){
+	        gl_FragColor = vec4( 0.92156, 0.38431, 0.11764, 1.0);
+
+	    }
+
+	    //Rosso con prob del 20%
+	    if (random < 0.80){
+	         gl_FragColor = vec4(0.56078, 0.01564, 0.03925, 1.0);
+	    }
+
+	    //Texture del meteorite con prob 60%
+	    if (random < 0.60){
+	        gl_FragColor = texture2D(mytexture, vTextCoord);
+	    }
+
 	    /*
 	    if(tmp == 1.0){
 	        gl_FragColor = texture2D(mytexture, vTextCoord);
@@ -176,7 +200,7 @@
     var sun, asteroid;
     var m_velocity, e_velocity, j_velocity;
     var time;
-    var controls, scene, camera, axesHelper, light, listener;
+    var controls, scene, camera, axesHelper, light, listener, stats, container;
     var renderer;
     var full_screen = false;
 
@@ -186,15 +210,31 @@
     renderer.setSize(window.outerWidth, window.outerHeight);
     document.body.appendChild(renderer.domElement);
 
+
+
     //SCENE AND CAMERA
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(70, window.outerWidth / window.outerHeight);
-    camera.position.z = 300;
+    camera.position.z = 400;
     scene.add(camera);
 
 
     //CAMERA CONTROLS
     controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+    //STATS
+    stats = new Stats();
+    stats.showPanel(0);
+    document.body.appendChild( stats.dom );
+
+    //****************************
+    //Sun modeling
+
+    var sunTexture = loader.load( 'images/sun.png');
+    var sunGeometry = new THREE.SphereBufferGeometry( 30, 20, 20 );
+    var sunMaterial = new THREE.MeshBasicMaterial( { map: sunTexture, overdraw: 0.5} );
+    var sun_kernel = new THREE.Mesh( sunGeometry, sunMaterial );
+    scene.add(sun_kernel);
 
     //****************************
     //Mars modeling
@@ -249,8 +289,8 @@
     light.position.set( 0, 0, 0 );
     scene.add( light );
 
-    //Audio
 
+    //Audio
     //Create an AudioListener and add it to the camera
     listener = new THREE.AudioListener();
     camera.add( listener );
@@ -272,7 +312,7 @@
 
     function animate() {
 
-
+        stats.begin();
         if(asteroid.center.distanceTo(sun.center) < (asteroid.radius + sun.radius)-2 && impact == false){
             console.log(asteroid.velocity)
             impact = true;
@@ -297,7 +337,7 @@
             asteroidHit = {
                 radius: ASTEROID_RADIUS,
                 mass: ASTEROID_MASS,
-                obj: createPointsPlanet(ASTEROID_RADIUS, ASTEROID_PARTICLES, asteroid.center, ASTEROID_IMPACT_MATERIAL),
+                obj: createPointsPlanet(ASTEROID_RADIUS, ASTEROID_PARTICLES, asteroid.center, ASTEROID_IMPACT_MATERIAL, 4),
                 center: asteroid.center,
                 velocity: asteroid.velocity,
                 acceleration: asteroid.acceleration
@@ -314,7 +354,7 @@
         }
 
         else if(impact == true){
-            asteroidHit.obj.material.uniforms.time.value += 0.1;//TODO: 1/60;
+            asteroidHit.obj.material.uniforms.time.value += 0.1;
         }
 
         else {
@@ -344,7 +384,10 @@
         j_velocity = planet_newton_movement(jupiter, j_velocity, sun);
         jupiter.rotation.y = 5*time;
 
+
+        stats.end();
         requestAnimationFrame(animate);
+
         camera.updateMatrixWorld( true );
         renderer.render(scene, camera);
 
@@ -364,7 +407,7 @@
         sun ={
             radius: SUN_RADIUS,
             mass: SUN_MASS,
-            obj: createPointsPlanet(SUN_RADIUS, SUN_PARTICLES, SUN_INIT_POSITION, SUN_MATERIAL),
+            obj: createPointsPlanet(SUN_RADIUS, SUN_PARTICLES, SUN_INIT_POSITION, SUN_MATERIAL, Math.pow(2, 20)),
             center: SUN_INIT_POSITION,
             velocity: SUN_INIT_VELOCITY,
             acceleration: SUN_INIT_ACCELERATION
@@ -386,7 +429,7 @@
         asteroid ={
             radius: ASTEROID_RADIUS,
             mass: ASTEROID_MASS,
-            obj: createPointsPlanet(ASTEROID_RADIUS, ASTEROID_PARTICLES, ASTEROID_INIT_POSITION, ASTEROID_MATERIAL),
+            obj: createPointsPlanet(ASTEROID_RADIUS, ASTEROID_PARTICLES, ASTEROID_INIT_POSITION, ASTEROID_MATERIAL, 4),
             center: ASTEROID_INIT_POSITION,
             velocity: ASTEROID_INIT_VELOCITY,
             acceleration: ASTEROID_INIT_ACCELERATION

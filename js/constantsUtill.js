@@ -8,7 +8,7 @@ var SUN_PARTICLES = 3 * 15000;
 const SUN_INIT_POSITION = new THREE.Vector3(0.0, 0.0, 0.0);
 const SUN_INIT_VELOCITY = new THREE.Vector3(0.0, 0.0, 0.0);
 const SUN_INIT_ACCELERATION = new THREE.Vector3(0.0, 0.0, 0.0);
-const SUN_RADIUS = 30;
+const SUN_RADIUS = 30 +2 ; //2 sono le particelle in atmosfera e protuberanze
 const SUN_MASS = 5.989 * Math.pow(10, 30);
 
 
