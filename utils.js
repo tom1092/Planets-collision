@@ -1,13 +1,13 @@
 
 
-function createPointsPlanet(radius, numPoints, initPosition, material) {
+function createPointsPlanet(radius, numPoints, initPosition, material, sqrt_scale_factor) {
     var geometry = new THREE.BufferGeometry();
 
     var positions = new Float32Array(numPoints);
 
     for (var i = 0; i < numPoints; i+=3) {
         //var rho = Math.pow(Math.random() * radius, 0.25);
-        var rho = Math.pow(Math.random(), 0.25) * radius;
+        var rho = Math.pow(Math.random(), 1/sqrt_scale_factor) * radius;
         var theta = Math.random() * 360;
         var phi = 90 - (Math.random() * 180);
 
