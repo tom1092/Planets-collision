@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>ThreeJs and shader demo</title>
+	<title>Asteroid impact</title>
 	<style>
 		body { margin: 0; padding: 0; font-size: 0; }
 		canvas { width: 100%; height: 100%; }
@@ -14,7 +14,7 @@
 	<script src="js/constantsUtill.js"></script>
 </head>
 
-<body>
+<body style="text-align: center;">
 
 <script id="sunVertexShader" type="x-shader/x-vertex">
 	varying vec2 vTextCoord;
@@ -94,6 +94,7 @@
 	    float dist2 = distance(position, center);
 
 		vec3 sunDirection = sunCenter - position;
+		vec3 centerDirection = center - position;
 	    vec3 impactDirection = position - hitPoint;
 
 	    vec3 positionToSun = vec3(position);
@@ -104,34 +105,33 @@
         vec3 vNorm = normalize(vcm);
 
         float randomFactor = rand(vec2(rand(vec2(position.x, position.y)), position.z));
-        if((dist1 < radius*2.0*0.85) && (dist2 > radius*0.5)){
+
+        if((dist2 > radius*0.85)){
             //tmp = 1.0;
             f = (f + randomFactor)/100.0;
 
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x + impactDirection.x*f*time, position.y + impactDirection.y*f*time, position.z + impactDirection.z*f*time, 1.0);
+            if(randomFactor > 0.10){
+				vec3 crossPos = normalize(cross(sunDirection, centerDirection));
+				float randomTangent = length(impactDirection) + length(impactDirection) * rand(vec2(position.x, position.y));
+				vec3 finalPos = impactDirection + vec3(crossPos.x*randomTangent, crossPos.y*randomTangent, crossPos.z*randomTangent);
+				finalPos = normalize(finalPos);
+				finalPos = vec3(finalPos.x * length(impactDirection), finalPos.y * length(impactDirection), finalPos.z * length(impactDirection));
+		   		gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x + finalPos.x*f*time, position.y + finalPos.y*f*time, position.z + finalPos.z*f*time, 1.0);
+			}
+            else{
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x + impactDirection.x*f*time, position.y + impactDirection.y*f*time, position.z + impactDirection.z*f*time, 1.0);
+            }
 
 
         }
         else{
 
-            /*positionToSun = vec3(position.x + sunDirection.x * randomFactor/100.0 * time,
-             					 position.y + sunDirection.y * randomFactor/100.0 * time,
-             					 position.z + sunDirection.z * randomFactor/100.0 * time);
-             					 */
-
-            /*positionToSun = vec3(position.x / log(time/100.0+2.0),
-             					 position.y / log(time/100.0+2.0),
-             					 position.z / log(time/100.0+2.0));*/
+            float sunRadius = 30.0;
             positionToSun = position;
-            float log_scale = 0.01;
-            if(time < 10.0){
-                log_scale = 0.1;
-
-            }
             float underTheSurface = 0.98;
             vec3 final = vec3(position-sunCenter);
             final = normalize(final);
-            final = vec3(final.x*10.0*underTheSurface, final.y*10.0*underTheSurface, final.z*10.0*underTheSurface);
+            final = vec3(final.x*sunRadius*underTheSurface, final.y*sunRadius*underTheSurface, final.z*sunRadius*underTheSurface);
             final = final+sunCenter;
             float lambda = 1.0-0.005*time;
             positionToSun = vec3((1.0-lambda)*final.x + lambda*position.x, (1.0-lambda)*final.y + lambda*position.y, (1.0-lambda)*final.z + lambda*position.z);
@@ -164,16 +164,67 @@
 
 <script>
 
+
+	//**********************************
+
+    //VARIABLES
+    const SUN_MATERIAL = create_shader_material('images/sun.png', 'sunVertexShader', 'sunFragmentShader');
+    const ASTEROID_MATERIAL = create_shader_material('images/asteroid.jpg', 'planetVertexShader', 'planetFragmentShader');
+    var loader = new THREE.TextureLoader();
+    var impact = false;
+    var asteroidHit;
+    var sun, asteroid;
+    var m_velocity, e_velocity, j_velocity;
+    var time;
+    var controls, scene, camera, axesHelper, light, listener;
+    var renderer;
+    var full_screen = false;
+
+
     //RENDERER
-    var renderer = new THREE.WebGLRenderer({antialias:true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer.setSize(window.outerWidth, window.outerHeight);
     document.body.appendChild(renderer.domElement);
 
     //SCENE AND CAMERA
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight);
-    camera.position.z = 200;
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(70, window.outerWidth / window.outerHeight);
+    camera.position.z = 300;
     scene.add(camera);
+
+
+    //CAMERA CONTROLS
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+    //****************************
+    //Mars modeling
+
+    var marsTexture = loader.load( 'images/mars.jpg');
+    var marsGeometry = new THREE.SphereBufferGeometry( 2.80, 20, 20 );
+    var marsMaterial = new THREE.MeshBasicMaterial( { map: marsTexture, overdraw: 0.5} );
+    var mars = new THREE.Mesh( marsGeometry, marsMaterial );
+    scene.add(mars);
+
+
+    //****************************
+    //Earth modeling
+
+    var earthTexture = loader.load( 'images/land_ocean_ice_cloud_2048.jpg');
+    var earthGeometry = new THREE.SphereBufferGeometry( 3, 20, 20 );
+    var earthMaterial = new THREE.MeshBasicMaterial( { map: earthTexture, overdraw: 0.5} );
+    var earth = new THREE.Mesh( earthGeometry, earthMaterial );
+    scene.add(earth);
+
+    //****************************
+    //Jupiter modeling
+
+    var jupTexture = loader.load( 'images/jupiter.jpg');
+    var jupGeometry = new THREE.SphereBufferGeometry( 10, 20, 20 );
+    var jupMaterial = new THREE.MeshBasicMaterial( { map: jupTexture, overdraw: 0.5} );
+    var jupiter = new THREE.Mesh( jupGeometry, jupMaterial );
+    scene.add(jupiter);
+
+
 
     //SET CUBE BACKGROUND
     var genCubeUrls = function( prefix, postfix ) {
@@ -188,96 +239,35 @@
     scene.background = new THREE.CubeTextureLoader().load(ldrUrls);
 
     //AXES HELPER
-    var axesHelper = new THREE.AxesHelper(5); //The X axis is red. The Y axis is green. The Z axis is blue.
+    axesHelper = new THREE.AxesHelper(5); //The X axis is red. The Y axis is green. The Z axis is blue.
     scene.add(axesHelper);
 
-    //CAMERA CONTROLS
-    var controls;
-    controls = new THREE.OrbitControls( camera, renderer.domElement );
+
 
     //LIGHT
-    var light = new THREE.PointLight( 0xff0000, 1, 100 );
+    light = new THREE.PointLight( 0xff0000, 1, 100 );
     light.position.set( 0, 0, 0 );
     scene.add( light );
 
-
-    //****************************
-    //Sun modeling
-
-    const SUN_MATERIAL = create_shader_material('images/sun.png', 'sunVertexShader', 'sunFragmentShader');
-    var sun ={
-        radius: SUN_RADIUS,
-        mass: SUN_MASS,
-        obj: createPointsPlanet(SUN_RADIUS, SUN_PARTICLES, SUN_INIT_POSITION, SUN_MATERIAL),
-        center: SUN_INIT_POSITION,
-        velocity: SUN_INIT_VELOCITY,
-        acceleration: SUN_INIT_ACCELERATION
-    };
-    scene.add(sun.obj);
-    sun.obj.material.uniforms.time = {value: 0};
-
-
-    //****************************
-    //Asteroid modeling
-
-    const ASTEROID_MATERIAL = create_shader_material('images/asteroid.jpg', 'planetVertexShader', 'planetFragmentShader');
-    var asteroid ={
-        radius: ASTEROID_RADIUS,
-        mass: ASTEROID_MASS,
-        obj: createPointsPlanet(ASTEROID_RADIUS, ASTEROID_PARTICLES, ASTEROID_INIT_POSITION, ASTEROID_MATERIAL),
-        center: ASTEROID_INIT_POSITION,
-        velocity: ASTEROID_INIT_VELOCITY,
-        acceleration: ASTEROID_INIT_ACCELERATION
-    };
-    asteroid.obj.material.uniforms.center = {value: asteroid.center};
-    asteroid.obj.material.uniforms.uLight = {value: sun.center};
-    scene.add(asteroid.obj);
-
-    //****************************
-	//Earth modeling
-
-    var loader = new THREE.TextureLoader();
-    var earthTexture = loader.load( 'images/land_ocean_ice_cloud_2048.jpg');
-
-	var earthGeometry = new THREE.SphereBufferGeometry( 3, 20, 20 );
-	var earthMaterial = new THREE.MeshBasicMaterial( { map: earthTexture, overdraw: 0.5} );
-	var earth = new THREE.Mesh( earthGeometry, earthMaterial );
-	scene.add(earth);
-	earth.position.set(EARTH_INIT_POSITION.x, EARTH_INIT_POSITION.y, EARTH_INIT_POSITION.z);
-
-
-    //****************************
-    //Jupiter modeling
-
-    var loader = new THREE.TextureLoader();
-    var jupTexture = loader.load( 'images/jupiter.jpg');
-
-    var jupGeometry = new THREE.SphereBufferGeometry( 3, 20, 20 );
-    var jupMaterial = new THREE.MeshBasicMaterial( { map: jupTexture, overdraw: 0.5} );
-    var jupiter = new THREE.Mesh( jupGeometry, jupMaterial );
-    scene.add(jupiter);
-    jupiter.position.set(JUPITER_INIT_POSITION.x, JUPITER_INIT_POSITION.y, JUPITER_INIT_POSITION.z);
-
-	//*****************************
     //Audio
 
     //Create an AudioListener and add it to the camera
-    var listener = new THREE.AudioListener();
+    listener = new THREE.AudioListener();
     camera.add( listener );
     // create a global audio source
     var sound = new THREE.Audio( listener );
     var audioLoader = new THREE.AudioLoader();
-    audioLoader.load( 'audio/interstellarPiano.mp3', function( buffer ) {
-        sound.setBuffer( buffer );
-        sound.setLoop(true);
-        sound.setVolume(0.5);
-        //sound.play();
-    });
 
-	//**********************************
+    load_song('audio/TheGreatGigInTheSky.mp3');
 
-    var impact = false;
-    var asteroidHit;
+
+
+    initialize();
+    createPanel();
+
+
+
+    animate();
 
     function animate() {
 
@@ -298,12 +288,12 @@
             var hitPoint = vectorScalarProduct(vectorSum(asteroid.center, sun.center), 0.5);
             scene.remove(asteroid.obj);
 
-            //Vector view of center of mass velocity vector
+            /*Vector view of center of mass velocity vector
             var arrowHelper = new THREE.ArrowHelper( vcm.normalize(), hitPoint, 10, 0xffff00 );
-            scene.add( arrowHelper );
+            scene.add( arrowHelper );*/
 
             const ASTEROID_IMPACT_MATERIAL = create_shader_material('images/asteroid.jpg', 'vertexShaderPlanetImpact', 'fragmentShaderPlanetImpact');
-            asteroidHit ={
+            asteroidHit = {
                 radius: ASTEROID_RADIUS,
                 mass: ASTEROID_MASS,
                 obj: createPointsPlanet(ASTEROID_RADIUS, ASTEROID_PARTICLES, asteroid.center, ASTEROID_IMPACT_MATERIAL),
@@ -333,18 +323,24 @@
             asteroid.obj.material.uniforms.center = {value: asteroid.center}; //update asteroid center uniform variable (light purposes)
         }
 
-        var time = performance.now()/1000; //time second
+        time = performance.now()/1000; //time second
 
         //sun texture animation
         sun.obj.material.uniforms.time.value += (time/10);
         shake(sun);
 
+
+        //Mars orbit
+        m_velocity = planet_newton_movement(mars, m_velocity, sun);
+        mars.rotation.y = 5*time;
+
+
         //Earth orbit
-        EARTH_VELOCITY = planet_newton_movement(earth, EARTH_VELOCITY, sun);
+        e_velocity = planet_newton_movement(earth, e_velocity, sun);
         earth.rotation.y = 5*time;
 
         //Jupiter orbit
-        JUPITER_VELOCITY = planet_newton_movement(jupiter, JUPITER_VELOCITY, sun);
+        j_velocity = planet_newton_movement(jupiter, j_velocity, sun);
         jupiter.rotation.y = 5*time;
 
         requestAnimationFrame(animate);
@@ -352,7 +348,191 @@
         renderer.render(scene, camera);
 
     }
-    animate();
+
+    function initialize(){
+
+
+        controls.reset()
+
+        //****************************
+        //Sun modeling
+        if(sun) {
+            scene.remove(sun.obj);
+            console.log("yes");
+        }
+        sun ={
+            radius: SUN_RADIUS,
+            mass: SUN_MASS,
+            obj: createPointsPlanet(SUN_RADIUS, SUN_PARTICLES, SUN_INIT_POSITION, SUN_MATERIAL),
+            center: SUN_INIT_POSITION,
+            velocity: SUN_INIT_VELOCITY,
+            acceleration: SUN_INIT_ACCELERATION
+        };
+        scene.add(sun.obj);
+        sun.obj.material.uniforms.time = {value: 0};
+
+
+        //****************************
+        //Asteroid modeling
+        if(asteroidHit) {
+            scene.remove(asteroidHit.obj);
+        }
+
+        if(asteroid) {
+            scene.remove(asteroid.obj);
+        }
+
+        asteroid ={
+            radius: ASTEROID_RADIUS,
+            mass: ASTEROID_MASS,
+            obj: createPointsPlanet(ASTEROID_RADIUS, ASTEROID_PARTICLES, ASTEROID_INIT_POSITION, ASTEROID_MATERIAL),
+            center: ASTEROID_INIT_POSITION,
+            velocity: ASTEROID_INIT_VELOCITY,
+            acceleration: ASTEROID_INIT_ACCELERATION
+        };
+        asteroid.obj.material.uniforms.center = {value: asteroid.center};
+        asteroid.obj.material.uniforms.uLight = {value: sun.center};
+        scene.add(asteroid.obj);
+
+        mars.position.set(MARS_INIT_POSITION.x, MARS_INIT_POSITION.y, MARS_INIT_POSITION.z);
+        earth.position.set(EARTH_INIT_POSITION.x, EARTH_INIT_POSITION.y, EARTH_INIT_POSITION.z);
+        jupiter.position.set(JUPITER_INIT_POSITION.x, JUPITER_INIT_POSITION.y, JUPITER_INIT_POSITION.z);
+        impact = false;
+
+        m_velocity = MARS_VELOCITY;
+        e_velocity = EARTH_VELOCITY;
+        j_velocity = JUPITER_VELOCITY;
+        time = 0;
+        //*****************************
+    }
+
+    function createPanel(){
+
+        var settings = {
+            posX: ASTEROID_INIT_POSITION.x,
+            posY: ASTEROID_INIT_POSITION.y,
+            posZ: ASTEROID_INIT_POSITION.z,
+
+            velX: ASTEROID_INIT_VELOCITY.x/Math.pow(10,7),
+            velY: ASTEROID_INIT_VELOCITY.y/Math.pow(10,7),
+            velZ: ASTEROID_INIT_VELOCITY.z/Math.pow(10,7),
+
+            mass: ASTEROID_MASS,
+            asteroid_particles: ASTEROID_PARTICLES/3,
+            sun_particles: SUN_PARTICLES/3,
+
+
+        };
+
+        var gui = new dat.GUI();
+        var h;
+
+        h = gui.addFolder("Asteroid initial position");
+        h.add( settings, "posX", -200.0, 200.0, 0.025 ).name( "x" );
+        h.add( settings, "posY", -200.0, 200.0, 0.025 ).name( "y" );
+        h.add( settings, "posZ", -200.0, 200.0, 0.025 ).name( "z" );
+
+        h = gui.addFolder("Asteroid initial velocity");
+        h.add( settings, "velX", -10.0, 10.0, 0.025 ).name( "x" );
+        h.add( settings, "velY", -10.0, 10.0, 0.025 ).name( "y" );
+        h.add( settings, "velZ", -10.0, 10.0, 0.025 ).name( "z" );
+
+        h = gui.addFolder("Asteroid mass");
+        h.add(settings, "mass", 1000.0, 10000000.0, 100.0 ).name( "mass" );
+
+        h = gui.addFolder("Asteroid particles");
+        h.add(settings, "asteroid_particles", 2000.0, 100000.0, 1.0 ).name( "particles");
+
+        h = gui.addFolder("Sun particles");
+        h.add(settings, "sun_particles", 2000.0, 100000.0, 1.0 ).name( "particles");
+
+        var song_files = {
+            song1:"audio/interstellarPiano.mp3",
+            song2:"audio/Mountains.mp3",
+            song3:"audio/Bach.mp3",
+            song4:"audio/TheGreatGigInTheSky.mp3"
+
+        }
+        var songs = {
+            song1: true,
+            song2: false,
+            song3: false,
+            song4: false
+        }
+
+        h = gui.addFolder("Song");
+        var song1 = h.add(songs, 'song1').name('Stay').listen().onChange(function(){setChecked("song1")});
+        var song2 = h.add(songs, 'song2').name('Mountains').listen().onChange(function(){setChecked("song2")});
+        var song3 = h.add(songs, 'song3').name('Cello').listen().onChange(function(){setChecked("song3")});
+        var song4 = h.add(songs, 'song4').name('The Great Gig').listen().onChange(function(){setChecked("song4")});
+
+        function setChecked( prop ){
+            for (let param in songs){
+                songs[param] = false;
+            }
+            songs[prop] = true;
+            console.log(song_files[prop]);
+            load_song(song_files[prop]);
+        }
+        var reload = {
+            add:function(){
+                ASTEROID_INIT_POSITION = new THREE.Vector3(settings.posX, settings.posY, settings.posZ);
+                ASTEROID_INIT_VELOCITY = new THREE.Vector3(settings.velX * Math.pow(10,7), settings.velY * Math.pow(10,7), settings.velZ * Math.pow(10,7));
+                ASTEROID_MASS = settings.mass;
+                ASTEROID_PARTICLES = 3 * settings.asteroid_particles;
+                SUN_PARTICLES = 3 * settings.sun_particles;
+                initialize();
+            }
+        };
+
+        var screen = {add:function(){
+
+            var elem = document.documentElement;
+            if (!full_screen){
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.mozRequestFullScreen) { /* Firefox */
+                    elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { /* IE/Edge */
+                    elem.msRequestFullscreen();
+                }
+                full_screen = true;
+            }
+            else{
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) { /* Firefox */
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { /* IE/Edge */
+                    document.msExitFullscreen();
+                }
+
+                full_screen = false;
+            }
+        }};
+        h.add(reload,'add').name('Reload scenario');
+        h.add(screen,'add').name('Full Screen mode');
+
+        h.open();
+    }
+
+    function load_song(path){
+
+        if (sound.isPlaying){
+            sound.pause();
+        }
+        audioLoader.load( path, function( buffer ) {
+            sound.setBuffer( buffer );
+            sound.setLoop(true);
+            sound.setVolume(0.5);
+            sound.play();
+        });
+
+    }
 	</script>
 
 </body>
