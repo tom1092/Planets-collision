@@ -4,8 +4,7 @@
 	<meta charset="utf-8">
 	<title>Asteroid impact</title>
 	<style>
-		body { margin: 0; padding: 0; font-size: 0; }
-		canvas { width: 100%; height: 100%; }
+		body { margin: 0; padding: 0; font-size: 0; overflow: hidden; }
 	</style>
 	<script src="js/three.js"></script>
 	<script src="js/controls/OrbitControls.js"></script>
@@ -190,7 +189,6 @@
 
 <script>
 
-
 	//**********************************
 
     //VARIABLES
@@ -202,14 +200,14 @@
     var sun, asteroid;
     var m_velocity, e_velocity, j_velocity;
     var time;
-    var controls, scene, camera, axesHelper, light, listener, stats, container;
+    var controls, scene, camera, axesHelper, listener, stats, song_path;
     var renderer;
     var full_screen = false;
 
 
     //RENDERER
     renderer = new THREE.WebGLRenderer({antialias:true});
-    renderer.setSize(window.outerWidth, window.outerHeight);
+    renderer.setSize(window.screen.width, window.screen.height);
     document.body.appendChild(renderer.domElement);
 
 
@@ -522,10 +520,13 @@
             }
             songs[prop] = true;
             console.log(song_files[prop]);
-            load_song(song_files[prop]);
+            console.log(songs);
+            song_path = song_files[prop];
+            load_song(song_path);
         }
         var reload = {
             add:function(){
+                load_song(song_path);
                 ASTEROID_INIT_POSITION = new THREE.Vector3(settings.posX, settings.posY, settings.posZ);
                 ASTEROID_INIT_VELOCITY = new THREE.Vector3(settings.velX * Math.pow(10,7), settings.velY * Math.pow(10,7), settings.velZ * Math.pow(10,7));
                 ASTEROID_MASS = settings.mass;
