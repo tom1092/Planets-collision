@@ -1,37 +1,46 @@
-## Welcome to GitHub Pages
+# Planets-collision
 
-You can use the [editor on GitHub](https://github.com/tom1092/Planets-collision/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+## Project goals
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+* Simulate the collision among two particles systems.
+* Modeling the motion of an astronomical object.
+* Use shaders programming (other than ThreeJs and WebGL libraries) to render our scene.
 
-### Markdown
+### Spheres modeling
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Each planet was treated like a full sphere made by points. The approach followed consists in a simple application of a coordinate system conversion: from spherical to cartesian.
 
-```markdown
-Syntax highlighted code block
+![Alt Text](https://github.com/kinik93/Planets-collision/blob/master/readmeImages/img1764.png)
 
-# Header 1
-## Header 2
-### Header 3
+with ![f1]
 
-- Bulleted
-- List
+An example of final result with 300K particles is shown below
 
-1. Numbered
-2. List
+<p align="center"> 
+  <img src="https://github.com/kinik93/Planets-collision/blob/master/readmeImages/Sun.png">
+</p>
 
-**Bold** and _Italic_ and `Code` text
+##### Generate uniformly random distribution inside a sphere
 
-[Link](url) and ![Image](src)
-```
+Uniform sampling over a generic hypercube ![f3] gives, through a standard spherical-cartesian transformation, a non uniform n-shpere where points are gathered in the center.
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+<p align="center"> 
+  <img src="https://github.com/kinik93/Planets-collision/blob/master/readmeImages/circleNonUniform.png">
+</p>
 
-### Jekyll Themes
+In order to avoid this issue we can sampling in a non uniform manner over the ![f3] set, just make a sqrt operation. Next gif shows a one dimensional empirical proof of that fact.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/tom1092/Planets-collision/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+<p align="center"> 
+  <img src="https://github.com/kinik93/Planets-collision/blob/master/readmeImages/sampling.gif">
+</p>
 
-### Support or Contact
+Using this procedure in a 2d cube and mapping each point generated into a circle we can get a visual confirmation of the improvement carried out.
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+<p align="center"> 
+  <img src="https://github.com/kinik93/Planets-collision/blob/master/readmeImages/circleUniform.png">
+</p>
+
+Similar consideration are still valid for the 3d case and higher dimension.
+
+[f1]: http://chart.apis.google.com/chart?cht=tx&chl=\theta\in[-\pi,\pi],\phi\in[-\pi/2,\pi/2],r\in[0,R]
+[f3]: http://chart.apis.google.com/chart?cht=tx&chl=[0,1]^n 
