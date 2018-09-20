@@ -244,7 +244,7 @@
     //Mars modeling
 
     var marsTexture = loader.load( 'images/mars.jpg');
-    var marsGeometry = new THREE.SphereBufferGeometry( 2.80, 20, 20 );
+    var marsGeometry = new THREE.SphereBufferGeometry( 5.80, 20, 20 );
     var marsMaterial = new THREE.MeshLambertMaterial( { map: marsTexture} );
     var mars = new THREE.Mesh( marsGeometry, marsMaterial );
     scene.add(mars);
@@ -254,7 +254,7 @@
     //Earth modeling
 
     var earthTexture = loader.load( 'images/land_ocean_ice_cloud_2048.jpg');
-    var earthGeometry = new THREE.SphereBufferGeometry( 3, 20, 20 );
+    var earthGeometry = new THREE.SphereBufferGeometry( 6, 20, 20 );
     var earthMaterial = new THREE.MeshLambertMaterial( { map: earthTexture} );
     var earth = new THREE.Mesh( earthGeometry, earthMaterial );
     scene.add(earth);
@@ -263,7 +263,7 @@
     //Jupiter modeling
 
     var jupTexture = loader.load( 'images/jupiter.jpg');
-    var jupGeometry = new THREE.SphereBufferGeometry( 10, 20, 20 );
+    var jupGeometry = new THREE.SphereBufferGeometry( 15, 20, 20 );
     var jupMaterial = new THREE.MeshLambertMaterial({map: jupTexture});
     var jupiter = new THREE.Mesh( jupGeometry, jupMaterial );
     scene.add(jupiter);
@@ -302,7 +302,8 @@
     var sound = new THREE.Audio( listener );
     var audioLoader = new THREE.AudioLoader();
 
-    load_song('audio/TheGreatGigInTheSky.mp3');
+    song_path = 'audio/TheGreatGigInTheSky.mp3';
+    load_song(song_path);
 
 
 
@@ -509,9 +510,9 @@
         }
 
         h = gui.addFolder("Song");
-        var song1 = h.add(songs, 'song1').name('Stay').listen().onChange(function(){setChecked("song1")});
+        var song1 = h.add(songs, 'song1').name('S.T.A.Y.').listen().onChange(function(){setChecked("song1")});
         var song2 = h.add(songs, 'song2').name('Mountains').listen().onChange(function(){setChecked("song2")});
-        var song3 = h.add(songs, 'song3').name('Cello').listen().onChange(function(){setChecked("song3")});
+        var song3 = h.add(songs, 'song3').name('Bach').listen().onChange(function(){setChecked("song3")});
         var song4 = h.add(songs, 'song4').name('The Great Gig').listen().onChange(function(){setChecked("song4")});
 
         function setChecked( prop ){

@@ -32,11 +32,11 @@ JUPITER_VELOCITY = vectorScalarProduct(JUPITER_VELOCITY, Math.sqrt(scaled_G*SUN_
 
 
 var ASTEROID_PARTICLES = 3 * 5000;
-var ASTEROID_INIT_POSITION = new THREE.Vector3(0.0, -120.0, 0.0);
+var ASTEROID_INIT_POSITION = new THREE.Vector3(50.0, -134.55, 40.0);
 
 const ASTEROID_INIT_ACCELERATION = new THREE.Vector3(0.0, 0.0, 0.0);
 const ASTEROID_RADIUS = 4;
 var ASTEROID_MASS = 10000;
 var ASTEROID_INIT_VELOCITY = vectorScalarProduct(new THREE.Vector3(1, 0, 0), 0.75*Math.sqrt(scaled_G*SUN_MASS/(vectorNorm(ASTEROID_INIT_POSITION)*1000)));
-//var ASTEROID_INIT_VELOCITY = new THREE.Vector3(100000, 0, 0);
+
 console.log("init",ASTEROID_INIT_VELOCITY);
