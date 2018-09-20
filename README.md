@@ -17,7 +17,7 @@ with ![f1]
 An example of final result with 300K particles is shown below
 
 <p align="center"> 
-  <img src="https://github.com/kinik93/Planets-collision/blob/master/readmeImages/Sun.png">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/Sun.png">
 </p>
 
 ##### Generate uniformly random distribution inside a sphere
@@ -25,19 +25,19 @@ An example of final result with 300K particles is shown below
 Uniform sampling over a generic hypercube ![f3] gives, through a standard spherical-cartesian transformation, a non uniform n-shpere where points are gathered in the center.
 
 <p align="center"> 
-  <img src="https://github.com/kinik93/Planets-collision/blob/master/readmeImages/circleNonUniform.png">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/circleNonUniform.png">
 </p>
 
 In order to avoid this issue we can sampling in a non uniform manner over the ![f3] set, just make a sqrt operation. Next gif shows a one dimensional empirical proof of that fact.
 
 <p align="center"> 
-  <img src="https://github.com/kinik93/Planets-collision/blob/master/readmeImages/sampling.gif">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/sampling.gif">
 </p>
 
 Using this procedure in a 2d cube and mapping each point generated into a circle we can get a visual confirmation of the improvement carried out.
 
 <p align="center"> 
-  <img src="https://github.com/kinik93/Planets-collision/blob/master/readmeImages/circleUniform.png">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/circleUniform.png">
 </p>
 
 Similar consideration are still valid for the 3d case and higher dimension.
