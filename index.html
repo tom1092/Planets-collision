@@ -238,12 +238,16 @@
     var sun_kernel = new THREE.Mesh( sunGeometry, sunMaterial );
     scene.add(sun_kernel);
 
+    // SUN LIGHT
+    var sunLight = new THREE.PointLight(0xffffff, 1.5);
+    scene.add(sunLight);
+
     //****************************
     //Mars modeling
 
     var marsTexture = loader.load( 'images/mars.jpg');
     var marsGeometry = new THREE.SphereBufferGeometry( 2.80, 20, 20 );
-    var marsMaterial = new THREE.MeshBasicMaterial( { map: marsTexture, overdraw: 0.5} );
+    var marsMaterial = new THREE.MeshLambertMaterial( { map: marsTexture} );
     var mars = new THREE.Mesh( marsGeometry, marsMaterial );
     scene.add(mars);
 
@@ -253,7 +257,7 @@
 
     var earthTexture = loader.load( 'images/land_ocean_ice_cloud_2048.jpg');
     var earthGeometry = new THREE.SphereBufferGeometry( 3, 20, 20 );
-    var earthMaterial = new THREE.MeshBasicMaterial( { map: earthTexture, overdraw: 0.5} );
+    var earthMaterial = new THREE.MeshLambertMaterial( { map: earthTexture} );
     var earth = new THREE.Mesh( earthGeometry, earthMaterial );
     scene.add(earth);
 
@@ -262,7 +266,7 @@
 
     var jupTexture = loader.load( 'images/jupiter.jpg');
     var jupGeometry = new THREE.SphereBufferGeometry( 10, 20, 20 );
-    var jupMaterial = new THREE.MeshBasicMaterial( { map: jupTexture, overdraw: 0.5} );
+    var jupMaterial = new THREE.MeshLambertMaterial({map: jupTexture});
     var jupiter = new THREE.Mesh( jupGeometry, jupMaterial );
     scene.add(jupiter);
 
@@ -286,10 +290,10 @@
 
 
 
-    //LIGHT
+    /*//LIGHT
     light = new THREE.PointLight( 0xff0000, 1, 100 );
     light.position.set( 0, 0, 0 );
-    scene.add( light );
+    scene.add( light );*/
 
 
     //Audio
@@ -569,7 +573,7 @@
     function load_song(path){
 
         if (sound.isPlaying){
-            sound.pause();
+            sound.stop();
         }
         audioLoader.load( path, function( buffer ) {
             sound.setBuffer( buffer );
