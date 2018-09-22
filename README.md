@@ -70,6 +70,13 @@ Next figure will clarify the previous method.
 
 This operation was repeated for every points then each point was moved onto its computed direction with a uniform linear motion. The speed of this motion depend by the kinetic energy lost, the more this is bigger the more the velocity module is higher.
 
+#### Modelling the motion
+<p align="center"> 
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/CollisionDirection_mod.gif">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/CollisionDirection_mod.gif">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/CollisionDirection_mod.gif">
+</p>
+
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\theta\in[-\pi,\pi],\phi\in[-\pi/2,\pi/2],r\in[0,R]
 [f3]: http://chart.apis.google.com/chart?cht=tx&chl=[0,1]^n 
 [f2]: http://chart.apis.google.com/chart?cht=tx&chl=-\Delta{E_k}=\frac{1}{2}\frac{m1\cdot{m2}}{m1+m2}(v_1-v_2)^2 
