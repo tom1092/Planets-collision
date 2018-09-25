@@ -20,28 +20,30 @@
 
 
 <script id="sunVertexShader" type="x-shader/x-vertex">
-	varying vec2 vTextCoord;
+	//varying vec2 vTextCoord;
 
 	uniform float time;
 
 	void main() {
 
 		gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x, position.y, position.z, 1.0);
-		vTextCoord = vec2(position);
+		//vTextCoord = vec2(position);
 	}
 </script>
 
 <script id="sunFragmentShader" type="x-shader/x-fragment">
     uniform sampler2D mytexture;
-    varying vec2 vTextCoord;
+    //varying vec2 vTextCoord;
 
 	void main() {
-	    gl_FragColor = texture2D(mytexture, vTextCoord);
+	    //gl_FragColor = texture2D(mytexture, vTextCoord);
+	    gl_FragColor = vec4( 0.92156, 0.38431, 0.11764, 1.0);
 
 	}
 </script>
 
 <script id="planetVertexShader" type="x-shader/x-vertex">
+    /*
 	varying vec2 vTextCoord;
 
 	varying vec4 vPosition; //for light purpose
@@ -53,9 +55,11 @@
 		gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 		vTextCoord = vec2(position);
 	}
+	*/
 </script>
 
 <script id="planetFragmentShader" type="x-shader/x-fragment">
+    /*
     uniform sampler2D mytexture;
     varying vec2 vTextCoord;
 
@@ -72,6 +76,7 @@
         vec3 color = diffuse*vec3(colorTmp);
 	    gl_FragColor = vec4(color, 1.0);
 	}
+	*/
 </script>
 
 <script id="vertexShaderPlanetImpact" type="x-shader/x-vertex">
