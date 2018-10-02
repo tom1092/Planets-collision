@@ -8,7 +8,7 @@
 
 ### Spheres modeling
 
-<p> 
+<p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/1.png" heigth="80%" width="80%">
 </p>
 
