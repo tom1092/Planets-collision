@@ -12,7 +12,6 @@
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/1.png" heigth="70%" width="70%">
 </p>
 
-![Alt Text](https://github.com/tom1092/Planets-collision/blob/master/readmeImages/img1764.png)
 
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/Sun.png">
@@ -21,8 +20,8 @@
 ##### Generate uniformly random distribution inside a sphere
 
 <p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/2.png">
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/3.png">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/2.png" heigth="70%" width="70%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/3.png" heigth="70%" width="70%">
 </p>
 
 <p align="center"> 
@@ -30,7 +29,7 @@
 </p>
 
 <p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/4.png">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/4.png" heigth="70%" width="70%">
 </p>
 
 <p align="center"> 
@@ -38,7 +37,7 @@
 </p>
 
 <p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/5.png">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/5.png" heigth="70%" width="70%">
 </p>
 
 <p align="center"> 
@@ -46,14 +45,14 @@
 </p>
 
 <p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/6.png">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/6.png" heigth="70%" width="70%">
 </p>
 
 ### Collisions
 
 <p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/7.png">
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/8.png">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/7.png" heigth="70%" width="70%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/8.png" heigth="70%" width="70%">
 </p>
 
 
@@ -62,7 +61,7 @@
 </p>
 
 <p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/9.png">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/9.png" heigth="70%" width="70%">
 </p>
 
 
@@ -76,7 +75,7 @@
 
 ### Modelling lights
 <p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/10.png">
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/9.png">
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/11.png">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/10.png" heigth="70%" width="70%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/9.png" heigth="70%" width="70%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/11.png" heigth="70%" width="70%">
 </p>
