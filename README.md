@@ -76,6 +76,10 @@
 ## Modelling lights
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/10.png" heigth="70%" width="70%">
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/9.png" heigth="70%" width="70%">
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/11.png" heigth="70%" width="70%">
 </p>
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/lightFinal.png" heigth="70%" width="70%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/nolightFinal.png" heigth="70%" width="70%">
+ <p align="center">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/11.png" heigth="70%" width="70%">
+ </p>
+
