@@ -9,7 +9,7 @@
 ### Spheres modeling
 
 <p> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/1.png" style="{height: 70%; width: 70%;}">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/1.png" heigth="80%" width="80%">
 </p>
 
 ![Alt Text](https://github.com/tom1092/Planets-collision/blob/master/readmeImages/img1764.png)
