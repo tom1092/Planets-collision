@@ -77,8 +77,10 @@
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/10.png" heigth="70%" width="70%">
 </p>
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/lightFinal.png" heigth="30%" width="30%">
+<div>
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/lightFinal.png" heigth="30%" width="30%" style="display:inline;">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/noLightFinal.png" heigth="30%" width="30%">
+</div>
  <p align="center">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/11.png" heigth="70%" width="70%">
  </p>
