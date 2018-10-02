@@ -6,7 +6,7 @@
 * Modeling the motion of an astronomical object.
 * Use shaders programming (other than ThreeJs and WebGL libraries) to render our scene.
 
-### Spheres modeling
+## Spheres modeling
 
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/1.png" heigth="70%" width="70%">
@@ -17,7 +17,7 @@
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/Sun.png">
 </p>
 
-##### Generate uniformly random distribution inside a sphere
+### Generate uniformly random distribution inside a sphere
 
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/2.png" heigth="70%" width="70%">
@@ -48,7 +48,7 @@
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/6.png" heigth="70%" width="70%">
 </p>
 
-### Collisions
+## Collisions
 
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/7.png" heigth="70%" width="70%">
@@ -65,7 +65,7 @@
 </p>
 
 
-### Modelling the motion
+## Modelling the motion
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/motion1.png">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/motion2.png">
@@ -73,7 +73,7 @@
 </p>
 
 
-### Modelling lights
+## Modelling lights
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/10.png" heigth="70%" width="70%">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/9.png" heigth="70%" width="70%">
