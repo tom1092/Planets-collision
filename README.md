@@ -48,6 +48,13 @@
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/6.png" heigth="70%" width="70%">
 </p>
 
+## Modelling the motion
+<p align="center"> 
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/motion1.png" heigth="80%" width="80%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/motion2.png" heigth="80%" width="80%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/motion3.png" heigth="80%" width="80%">
+</p>
+
 ## Collisions
 
 <p align="center"> 
@@ -62,14 +69,6 @@
 
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/9.png" heigth="70%" width="70%">
-</p>
-
-
-## Modelling the motion
-<p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/motion1.png" heigth="80%" width="80%">
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/motion2.png" heigth="80%" width="80%">
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/motion3.png" heigth="80%" width="80%">
 </p>
 
 
