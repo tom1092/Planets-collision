@@ -6,7 +6,7 @@
 * Modeling the motion of an astronomical object.
 * Use shaders programming (other than ThreeJs and WebGL libraries) to render our scene.
 
-## Spheres modeling
+<h2 align="center"> Spheres modelling </h2>
 
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/1.png" heigth="70%" width="70%">
@@ -17,7 +17,7 @@
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/Sun.png">
 </p>
 
-### Generate uniformly random distribution inside a sphere
+<h3 align="center"> Generate uniformly random distribution inside a sphere </h3>
 
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/2.png" heigth="70%" width="70%">
@@ -29,15 +29,15 @@
 </p>
 
 
-## Modelling the motion
+<h2 align="center"> Modelling the motion </h2>
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/motion1.png" heigth="80%" width="80%">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/motion2.png" heigth="80%" width="80%">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/motion3.png" heigth="80%" width="80%">
 </p>
 
-## Collisions
 
+<h2 align="center"> Collisions </h2>
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/5.png" heigth="70%" width="70%">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/6.png" heigth="70%" width="70%">
@@ -55,7 +55,8 @@
 </p>
 
 
-## Modelling lights
+
+<h2 align="center"> Modelling lights </h2>
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/8.png" heigth="70%" width="70%">
 </p>
@@ -68,7 +69,7 @@
  </p>
 
 
-## Implementation
+<h2 align="center"> Implementation </h2>
  <p align="center">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/Implementation.png" heigth="70%"      width="70%">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/scene.png" heigth="70%"      width="70%">
