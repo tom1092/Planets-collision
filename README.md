@@ -74,3 +74,8 @@
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/Implementation.png" heigth="70%"      width="70%">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/scene.png" heigth="70%"      width="70%">
  </p>
+
+
+Authors:
+* Niccolò Bellaccini, nicco.b.93@gmail.com, https://github.com/kinik93
+* Tommaso Aldinucci, tommaso.aldinucci@icloud.com, https://github.com/tom1092
