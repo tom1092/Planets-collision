@@ -49,7 +49,7 @@
 </p>
 
 <p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/9.png" heigth="70%" width="70%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/7.png" heigth="70%" width="70%">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/esponential.png" heigth="70%" width="70%">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/esp.gif" heigth="50%" width="50%">
 </p>
@@ -57,14 +57,14 @@
 
 ## Modelling lights
 <p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/10.png" heigth="70%" width="70%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/8.png" heigth="70%" width="70%">
 </p>
 <p align="center">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/lightFinal.png" heigth="40%" width="40%" style="display:inline;">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/noLightFinal.png" heigth="40%" width="40%">
 </p>
  <p align="center">
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/11.png" heigth="70%" width="70%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/9.png" heigth="70%" width="70%">
  </p>
 
 
