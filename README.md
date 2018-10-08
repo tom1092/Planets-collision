@@ -36,9 +36,6 @@
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/sampling.gif">
 </p>
 
-<p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/5.png" heigth="70%" width="70%">
-</p>
 
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/circleUniform.png">
