@@ -70,7 +70,7 @@
 <p align="center"> 
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/9.png" heigth="70%" width="70%">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/esponential.png" heigth="70%" width="70%">
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/esp.gif" heigth="70%" width="70%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/esp.gif" heigth="50%" width="50%">
 </p>
 
 
