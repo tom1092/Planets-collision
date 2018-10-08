@@ -20,7 +20,7 @@
 <h3 align="center"> Generate uniformly random distribution inside a sphere </h3>
 
 <p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/2.png" heigth="70%" width="70%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/2b.png" heigth="70%" width="70%">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/circleNonUniform.png">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/3.png" heigth="70%" width="70%">
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/sampling.gif">
