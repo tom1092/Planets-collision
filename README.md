@@ -1,5 +1,8 @@
 # Planets-collision
 
+# Planets-collision
+An online version of the site is reachable <a href="https://tom1092.github.io/Planets-collision/">here</a>.
+
 ## Project goals
 
 * Simulate the collision among two particles systems.
@@ -75,7 +78,11 @@
   <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/scene.png" heigth="70%"      width="70%">
  </p>
 
+### References:
+[1] Steven J. Gortler, "Foundations of 3D Computer Graphics," The MIT Press, 2012
 
-Authors:
+[2] K. Matsuda, R. Lea, "WebGL Programming Guide", Addison-Wesley Professional, 2013
+
+### Authors:
 * Niccolò Bellaccini, nicco.b.93@gmail.com, https://github.com/kinik93
 * Tommaso Aldinucci, tommaso.aldinucci@icloud.com, https://github.com/tom1092
