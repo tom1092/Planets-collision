@@ -12,7 +12,7 @@ An online version of the site is reachable <a href="https://tom1092.github.io/Pl
 <h2 align="center"> Spheres modelling </h2>
 
 <p align="center"> 
-  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/1.png" heigth="70%" width="70%">
+  <img src="https://github.com/tom1092/Planets-collision/blob/master/readmeImages/1b.png" heigth="70%" width="70%">
 </p>
 
 
